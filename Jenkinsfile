@@ -1,27 +1,40 @@
 pipeline {
     agent any 
     stages {
-        stage('Complie Stage') {
-
+        stage('Trigger build package') {
             steps {
                 withMaven(maven : 'maven_3_5_0') {
-                    sh 'mvn clean complie'
+                    echo 'build package python'
                 }
             }
         }
-        stage('Testing Stage') { 
+        stage('Deploy on test environment') { 
             steps {
                 withMaven(maven : 'maven_3_5_0') {
-                    sh 'mvn test'
+                    echo 'install on dev server'
                 }
             }
         }
-        stage('Deploy Stage') { 
+        stage('Check on dev environment') { 
             steps {
                 withMaven(maven : 'maven_3_5_0') {
-                    sh 'mvn deploy'
+                    echo 'success or not'
                 }
             }
         }
+        stage('Deploy on Product') { 
+            steps {
+                withMaven(maven : 'maven_3_5_0') {
+                    echo 'Install on Prod'
+                }
+            }
+        }
+        stage('Last check') { 
+            steps {
+                withMaven(maven : 'maven_3_5_0') {
+                    echo 'Done'
+                }
+            }
+        }        
     }
 }
