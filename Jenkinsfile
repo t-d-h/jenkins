@@ -2,7 +2,7 @@ stage('Pre-test') {
     node(any)
        def sout = new StringBuffer(), serr = new StringBuffer()
 
-        def proc ='./root/a.sh'.execute()
+        def proc ='/root/a.sh'.execute()
 
         proc.consumeProcessOutput(sout, serr)
         proc.waitForOrKill(1000)
