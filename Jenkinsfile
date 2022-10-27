@@ -1,6 +1,6 @@
 stage('Pre-test') {
     node(any)
-       sh(script: "/bin/bash /root/jenkins/a.sh")
+       sh '''/bin/bash /root/jenkins/a.sh'''
 }
 stage('Deploy on test environment') { 
     steps {
