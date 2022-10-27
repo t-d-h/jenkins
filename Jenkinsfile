@@ -1,6 +1,12 @@
 stage('Pre-test') {
     node(any)
-       sh '''/bin/bash /root/jenkins/a.sh'''
+       def sout = new StringBuffer(), serr = new StringBuffer()
+
+        def proc ='./root/a.sh'.execute()
+
+        proc.consumeProcessOutput(sout, serr)
+        proc.waitForOrKill(1000)
+        println sout
 }
 stage('Deploy on test environment') { 
     steps {
