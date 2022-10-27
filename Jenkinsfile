@@ -1,7 +1,6 @@
 stage('Pre-test') {
-    steps {
-            echo 'Copy package to testing enviroment'
-    }
+    node(any)
+       sh(script: "/bin/bash /root/jenkins/a.sh")
 }
 stage('Deploy on test environment') { 
     steps {
