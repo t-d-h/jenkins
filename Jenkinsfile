@@ -6,5 +6,5 @@ stage('Pre-test') {
         proc.consumeProcessOutput(sout, serr)
         proc.waitForOrKill(1000)
         println sout
+    }
 }
- 
