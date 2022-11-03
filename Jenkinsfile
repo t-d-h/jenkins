@@ -1,10 +1,10 @@
 stage('Pre-test') {
     node(any) {
-        def sout = new StringBuilder(), serr = new StringBuilder()
-        def proc = "ls /badDir".execute()
+        def cmd = 'hostname'
+        def sout = new StringBuffer(), serr = new StringBuffer()
+        def proc = cmd.execute()
         proc.consumeProcessOutput(sout, serr)
         proc.waitForOrKill(1000)
-        println "out> $sout\nerr> $serr"
-        }
+        println sout
 }
  
