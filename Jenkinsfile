@@ -1,5 +1,8 @@
+import java.util.concurrent.Callable
+import java.util.concurrent.Executors
+
 stage('Pre-test') {
     node(any) {
-    println(['ls', '/tmp/folder with spaces'].execute().text)
+    sh '''hostname'''
 }
 }
