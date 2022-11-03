@@ -1,6 +1,10 @@
-
-stage('Pre-test') {
-    node(any) {
-    sh '''#!/bin/bash hostname'''
-}
+pipeline {
+    agent any 
+    stages {
+        stage('Stage 1') {
+            steps {
+                echo 'Hello world!' 
+            }
+        }
+    }
 }
