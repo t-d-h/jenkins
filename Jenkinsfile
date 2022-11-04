@@ -1,6 +1,24 @@
 pipeline {
     agent any
     stages {
+
+        stage('Pre-check package') {
+            agent any
+            steps {
+                script {
+                    def failingCmd = '''test -f /var/lib/jenkins/workspace/python*'''
+                    def stdout = null
+                    try {
+                        stdout = sh(returnStdout: true, script: failingCmd)
+                        print("stdout(success)=" + stdout)
+                    } catch (Exception e) {
+                        error 'test failed'
+                    sh 'echo "exit"'
+                    }
+                }
+            }
+        }
+
         stage('Copy Package to testing node') {
             steps {
                 sh '''scp /var/lib/jenkins/workspace/python* root@192.168.1.181:~'''
