@@ -7,12 +7,11 @@ This is also a testing playground before we make one to PROD
 
 */
 
-projMap = ["namespace": "${NAMESPACE}", "project": "${PROJ}", "overlays": OVERLAYS.split()]
-command = 
-
+projMap = ["namespace": "${NAMESPACE}", "project": "${PROJ}", "overlays": OVERLAYS, "command"="${COMMAND}"]
 changelog = CHANGELOG.trim().replaceAll("\n+", "\n");
 
-currentBuild.displayName = "#" + currentBuild.number + " - " + NAMESPACE+":"+PROJ+":"+OVERLAYS.split()
+currentBuild.displayName = "#" + currentBuild.number + " - exec -" + NAMESPACE+":"+PROJ+":"+OVERLAYS.split()
+
 
 
 stage("Pre-check") {
