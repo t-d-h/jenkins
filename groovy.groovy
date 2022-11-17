@@ -9,16 +9,17 @@ This is also a testing playground before we make one to PROD
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
-projMap = ["namespace": "${NAMESPACE}", "project": "${PROJ}", "overlays": "${OVERLAYS}"]
+projMap = ["namespace": "${NAMESPACE}", "project": "${PROJ}", "overlay": "${OVERLAYS}"]
 command = COMMAND
 changelog = CHANGELOG.trim().replaceAll("\n+", "\n");
-
+pkgpath = null
 //check if there's any attachment
-if (command.contains('http://')) {
+if (COMMAND.contains('://')) {
     Pattern urlPattern = Pattern.compile("\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]",Pattern.CASE_INSENSITIVE);
     Matcher matcher = urlPattern.matcher(command);
     while (matcher.find()) {
-        String pkgpath = matcher.group()
+        pkgpath = matcher.group()
+        println "${pkgpath}"
         }
 }
 
@@ -42,10 +43,13 @@ stage("Pre-check") {
     }
 
     // check if pkgpath is exists, if yes, verify the url
-    if (binding.hasVariable('pkgpath')) {
+    if ("${pkgpath}" != null ) {
         println "its exists, trying to curl it"
-        //sh(script: "curl -sS --fail -IL $pkgpath >/dev/null")
-    }
+        sh(script: "curl -sS --fail -IL $pkgpath >/dev/null")
+    } 
+    
+    // check if the container is running
+    println "done"
 }
 
 stage("Execute") {
