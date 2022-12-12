@@ -3,16 +3,17 @@ import hudson.FilePath
 stage('Build Package') {
     node ("Jenkin-node") {
         git branch: 'main', url: "https://github.com/t-d-h/python-webserver.git"
-        sh(script: "rm -f /var/lib/jenkins/workspace/python*")
+        sh(script: "rm -f /var/lib/jenkins/workspace/${pkgName}")
 
         sh(script: "dpkg -b /var/lib/jenkins/workspace/Build-Debian-Package/")
         sh(script: "dpkg-name /var/lib/jenkins/workspace/Build-Debian-Package.deb")
+        def pkgName = sh(script:"ls -t /var/lib/jenkins/workspace/ | grep python", returnStdout: true).trim()
     }
 }
 
 stage('Pre-check Stage') {
     node ("Jenkin-node") {
-        def existsTest = sh(script: "test -f /var/lib/jenkins/workspace/python*", returnStatus: true)
+        def existsTest = sh(script: "test -f /var/lib/jenkins/workspace/${pkgName}", returnStatus: true)
         if (existsTest != 0 ) {
             error("Package not found")
         }
@@ -21,7 +22,7 @@ stage('Pre-check Stage') {
 
 stage('Deploy to testing node') {
     node ("Jenkin-node") {
-        sh(script: "scp /var/lib/jenkins/workspace/python* root@192.168.1.180:/root")
+        sh(script: "scp /var/lib/jenkins/workspace/${pkgName} root@192.168.1.180:/root")
     }
     
     node ("testing-env") {
@@ -48,7 +49,7 @@ stage('Approve to deploy on prod') {
 
 stage('Deploy on first production node') {
     node ("Jenkin-node") {
-        sh(script: "scp /var/lib/jenkins/workspace/python* root@192.168.1.190:/root")
+        sh(script: "scp /var/lib/jenkins/workspace/${pkgName} root@192.168.1.190:/root")
     }
 
     node ("Nginx") {
@@ -78,7 +79,7 @@ stage('Deploy on first production node') {
 
 stage('Deploy on second production node') {
     node ("Jenkin-node") {
-        sh(script: "scp /var/lib/jenkins/workspace/python* root@192.168.1.191:/root")
+        sh(script: "scp /var/lib/jenkins/workspace/${pkgName} root@192.168.1.191:/root")
     }
     node ("Nginx") {
         // switch all traffic to Prod1
