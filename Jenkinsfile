@@ -1,8 +1,10 @@
 import hudson.FilePath
 stage('Pre-check Stage') {
-    def existsTest = sh(script: "test -f /var/lib/jenkins/workspace/python*", returnStatus: true)
-    if (existsTest != 0 ) {
-        error("Package not found")
+    agent any {
+        def existsTest = sh(script: "test -f /var/lib/jenkins/workspace/python*", returnStatus: true)
+        if (existsTest != 0 ) {
+            error("Package not found")
+        }
     }
 }
 
