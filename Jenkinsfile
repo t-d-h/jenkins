@@ -3,7 +3,7 @@ def pkgName
 stage('Build Package') {
     node ("Jenkin-node") {
         git branch: 'main', url: "https://github.com/t-d-h/python-webserver.git"
-        sh(script: "rm -f /var/lib/jenkins/workspace/${pkgName}")
+        sh(script: "rm -f /var/lib/jenkins/workspace/python*")
 
         sh(script: "dpkg -b /var/lib/jenkins/workspace/Build-Debian-Package/")
         sh(script: "dpkg-name /var/lib/jenkins/workspace/Build-Debian-Package.deb")
