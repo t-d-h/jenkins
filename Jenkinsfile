@@ -10,7 +10,10 @@ stage('Deploy to testing node') {
     sh(script: "scp /var/lib/jenkins/workspace/python* root@192.168.1.180:~")
 
     agent { label 'testing-env' } {
-        sh(script: "dpkg -i \$(ls -t /root | grep python | head -1)")
+        def Ins1 = sh(script: "dpkg -i \$(ls -t /root | grep python | head -1)",returnStatus: true)
+        if (Ins1 != 0) {
+        error("Install failed, please check")
+        }
 
         def Check1 = sh(script: "curl http://127.0.0.1:80/",returnStatus: true)
         if (Check1 != 0) {
@@ -28,7 +31,10 @@ stage('Approve to deploy on prod') {
 stage('Deploy on first production node') {
    sh(script: "scp /var/lib/jenkins/workspace/python* root@192.168.1.190:~")
     agent { label 'Prod1' } {
-        sh(script: "dpkg -i \$(ls -t /root | grep python | head -1)")
+        def Ins2 = sh(script: "dpkg -i \$(ls -t /root | grep python | head -1)",returnStatus: true)
+        if (Ins2 != 0) {
+        error("Install failed on Prod1, please check")
+        }
     }
     agent { label 'Nginx' } {
         def Check2 = sh(script: "curl http://192.168.1.190:80/",returnStatus: true)
@@ -42,7 +48,10 @@ stage('Deploy on first production node') {
 stage('Deploy on second production node') {
    sh(script: "scp /var/lib/jenkins/workspace/python* root@192.168.1.191:~")
     agent { label 'Prod2' } {
-        sh(script: "dpkg -i \$(ls -t /root | grep python | head -1)")
+        def Ins3 = sh(script: "dpkg -i \$(ls -t /root | grep python | head -1)",returnStatus: true)
+        if (Ins3 != 0) {
+        error("Install failed on Prod2, please check")
+        }
     }
     agent { label 'Nginx' } {
         def Check3 = sh(script: "curl http://192.168.1.191:80/",returnStatus: true)
