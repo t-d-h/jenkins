@@ -1,7 +1,24 @@
 import hudson.FilePath
+
+stage('Build Package') {
+    node ("Jenkin-node") {
+        git https://github.com/t-d-h/python-webserver
+        sh(script: "rm -f /var/lib/jenkins/workspace/python*")
+
+        sh(script: "dpkg -b /var/lib/jenkins/workspace/Build-Debian-Package/")
+        sh(script: "dpkg-name /var/lib/jenkins/workspace/Build-Debian-Package.deb")
+
+        def Build = sh(script: "sudo test -f /var/lib/jenkins/workspace/python*", returnStatus: true)
+        if (existsTest != 0 ) {
+            error("Package not found")
+
+        }
+    }
+}
+
 stage('Pre-check Stage') {
     node ("Jenkin-node") {
-        def existsTest = sh(script: "test -f /var/lib/jenkins/workspace/python*", returnStatus: true)
+        def existsTest = sh(script: "sudo test -f /var/lib/jenkins/workspace/python*", returnStatus: true)
         if (existsTest != 0 ) {
             error("Package not found")
         }
@@ -10,7 +27,7 @@ stage('Pre-check Stage') {
 
 stage('Deploy to testing node') {
     node ("Jenkin-node") {
-        sh(script: "scp /var/lib/jenkins/workspace/python* root@192.168.1.180:~")
+        sh(script: "sudo scp /var/lib/jenkins/workspace/python* root@192.168.1.180:~")
     }
 
     node ("testing-env") {
