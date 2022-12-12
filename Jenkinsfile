@@ -30,6 +30,7 @@ stage('Deploy to testing node') {
         error("Install failed, please check")
         }
 
+        sh(script: "systemctl start python-webserver.service")
         def Check1 = sh(script: "curl http://127.0.0.1:80/",returnStatus: true)
         if (Check1 != 0) {
         error("Your application is not running, test failed")
@@ -49,12 +50,13 @@ stage('Deploy on first production node') {
     node ("Jenkin-node") {
         sh(script: "scp /var/lib/jenkins/workspace/python* root@192.168.1.190:/root")
     }
-
+    
     node ("prod1") {
         def Ins2 = sh(script: "dpkg -i /root/\$(ls -t /root | grep python | head -1)",returnStatus: true)
         if (Ins2 != 0) {
         error("Install failed on Prod1, please check")
         }
+        sh(script: "systemctl start python-webserver.service")
     }
     node ("Nginx") {
         def Check2 = sh(script: "curl http://192.168.1.190:80/",returnStatus: true)
@@ -75,6 +77,7 @@ stage('Deploy on second production node') {
         if (Ins3 != 0) {
         error("Install failed on Prod2, please check")
         }
+        sh(script: "systemctl start python-webserver.service")
     }
     node ("Nginx") {
         def Check3 = sh(script: "curl http://192.168.1.191:80/",returnStatus: true)
