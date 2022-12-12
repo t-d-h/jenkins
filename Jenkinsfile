@@ -11,15 +11,6 @@ stage('Build Package') {
     }
 }
 
-stage('Pre-check Stage') {
-    node ("Jenkin-node") {
-        def existsTest = sh(script: "test -f /var/lib/jenkins/workspace/${pkgName}", returnStatus: true)
-        if (existsTest != 0 ) {
-            error("Package not found")
-        }
-    }
-}
-
 stage('Deploy to testing node') {
     node ("Jenkin-node") {
         sh(script: "scp /var/lib/jenkins/workspace/${pkgName} root@192.168.1.180:/root")
