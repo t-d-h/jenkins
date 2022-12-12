@@ -1,6 +1,6 @@
 import hudson.FilePath
 stage('Pre-check Stage') {
-    node("Built-In Node") {
+    node ("Jenkin-node") {
         def existsTest = sh(script: "test -f /var/lib/jenkins/workspace/python*", returnStatus: true)
         if (existsTest != 0 ) {
             error("Package not found")
@@ -9,7 +9,7 @@ stage('Pre-check Stage') {
 }
 
 stage('Deploy to testing node') {
-    node("Built-In Node") {
+    node ("Jenkin-node") {
         sh(script: "scp /var/lib/jenkins/workspace/python* root@192.168.1.180:~")
     }
 
@@ -27,7 +27,7 @@ stage('Deploy to testing node') {
 }
 
 stage('Approve to deploy on prod') {
-    node("Built-In Node") {
+    node ("Jenkin-node") {
         echo "Application is running well on Testing environemnt"
         input(message: "Continue deploying to Production?", ok: 'OK')
         // notify to telegram
@@ -35,7 +35,7 @@ stage('Approve to deploy on prod') {
 }
 
 stage('Deploy on first production node') {
-    node("Built-In Node") {
+    node ("Jenkin-node") {
         sh(script: "scp /var/lib/jenkins/workspace/python* root@192.168.1.190:~")
     }
 
@@ -55,7 +55,7 @@ stage('Deploy on first production node') {
 }
 
 stage('Deploy on second production node') {
-    node("Built-In Node") {
+    node ("Jenkin-node") {
         sh(script: "scp /var/lib/jenkins/workspace/python* root@192.168.1.191:~")
     }
     
