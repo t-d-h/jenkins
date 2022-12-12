@@ -25,7 +25,7 @@ stage('Deploy to testing node') {
     }
 
     node ("testing-env") {
-        def Ins1 = sh(script: "dpkg -i \$(ls -t /root | grep python | head -1)",returnStatus: true)
+        def Ins1 = sh(script: "dpkg -i /root/\$(ls -t /root | grep python | head -1)",returnStatus: true)
         if (Ins1 != 0) {
         error("Install failed, please check")
         }
@@ -51,7 +51,7 @@ stage('Deploy on first production node') {
     }
 
     node ("prod1") {
-        def Ins2 = sh(script: "dpkg -i \$(ls -t /root | grep python | head -1)",returnStatus: true)
+        def Ins2 = sh(script: "dpkg -i /root/\$(ls -t /root | grep python | head -1)",returnStatus: true)
         if (Ins2 != 0) {
         error("Install failed on Prod1, please check")
         }
@@ -71,7 +71,7 @@ stage('Deploy on second production node') {
     }
     
     node ("prod2") {
-        def Ins3 = sh(script: "dpkg -i \$(ls -t /root | grep python | head -1)",returnStatus: true)
+        def Ins3 = sh(script: "dpkg -i /root/\$(ls -t /root | grep python | head -1)",returnStatus: true)
         if (Ins3 != 0) {
         error("Install failed on Prod2, please check")
         }
