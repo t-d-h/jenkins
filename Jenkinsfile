@@ -2,7 +2,7 @@ import hudson.FilePath
 
 stage('Build Package') {
     node ("Jenkin-node") {
-        git "https://github.com/t-d-h/python-webserver.git"
+        git branch: 'main', url: "https://github.com/t-d-h/python-webserver.git"
         sh(script: "rm -f /var/lib/jenkins/workspace/python*")
 
         sh(script: "dpkg -b /var/lib/jenkins/workspace/Build-Debian-Package/")
