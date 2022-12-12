@@ -4,9 +4,9 @@ stage('Build Package') {
     node ("Jenkin-node") {
         git branch: 'main', url: "https://github.com/t-d-h/python-webserver.git"
         sh(script: "rm -f /var/lib/jenkins/workspace/python*")
-
         sh(script: "dpkg -b /var/lib/jenkins/workspace/Build-Debian-Package/")
         sh(script: "dpkg-name /var/lib/jenkins/workspace/Build-Debian-Package.deb")
+        //Dont need to add check here because pipeline will stop when exitcode = 1
         pkgName = sh(script:"ls -t /var/lib/jenkins/workspace/ | grep python", returnStdout: true).trim()
     }
 }
@@ -34,7 +34,6 @@ stage('Approve to deploy on prod') {
     node ("Jenkin-node") {
         echo "Application is running well on Testing environemnt"
         input(message: "Continue deploying to Production?", ok: 'OK')
-        // notify to telegram
     }
 }
 
@@ -59,7 +58,6 @@ stage('Deploy on first production node') {
     node ("Nginx") {
         def Check2 = sh(script: "curl http://192.168.1.190:80/",returnStatus: true)
         if (Check2 != 0) {
-        //notify to telegram error1
         error("Your application is not running, please revert")
         }
         //switch traffic to 2 Servers
