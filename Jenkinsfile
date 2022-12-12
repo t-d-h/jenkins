@@ -21,7 +21,7 @@ stage('Pre-check Stage') {
 
 stage('Deploy to testing node') {
     node ("Jenkin-node") {
-        sh(script: "scp /var/lib/jenkins/workspace/python* root@192.168.1.180:~")
+        sh(script: "scp /var/lib/jenkins/workspace/python* root@192.168.1.180:/root")
     }
 
     node ("testing-env") {
@@ -47,7 +47,7 @@ stage('Approve to deploy on prod') {
 
 stage('Deploy on first production node') {
     node ("Jenkin-node") {
-        sh(script: "scp /var/lib/jenkins/workspace/python* root@192.168.1.190:~")
+        sh(script: "scp /var/lib/jenkins/workspace/python* root@192.168.1.190:/root")
     }
 
     node ("prod1") {
@@ -67,7 +67,7 @@ stage('Deploy on first production node') {
 
 stage('Deploy on second production node') {
     node ("Jenkin-node") {
-        sh(script: "scp /var/lib/jenkins/workspace/python* root@192.168.1.191:~")
+        sh(script: "scp /var/lib/jenkins/workspace/python* root@192.168.1.191:/root")
     }
     
     node ("prod2") {
