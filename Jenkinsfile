@@ -9,7 +9,7 @@ stage('Build Package') {
         sh(script: "dpkg-name /var/lib/jenkins/workspace/Build-Debian-Package.deb")
 
         def Build = sh(script: "sudo test -f /var/lib/jenkins/workspace/python*", returnStatus: true)
-        if (existsTest != 0 ) {
+        if (Build != 0 ) {
             error("Package not found")
 
         }
