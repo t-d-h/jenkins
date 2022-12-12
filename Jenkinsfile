@@ -1,6 +1,5 @@
 
 stage('Pre-check Stage') {
-    agent any
     steps {
         def existsTest = sh(script: "test -f /var/lib/jenkins/workspace/python*", returnStatus: true)
         if (existsTest != 0 ) {
@@ -12,7 +11,7 @@ stage('Pre-check Stage') {
 stage('Deploy to testing node') {
     sh(script: "scp /var/lib/jenkins/workspace/python* root@192.168.1.180:~")
 
-    node("testing-env") {
+    agent { label 'testing-env' } {
         sh(script: "dpkg -i \$(ls -t /root | grep python | head -1)")
 
         def Check1 = sh(script: "curl http://127.0.0.1:80/",returnStatus: true)
@@ -30,7 +29,7 @@ stage('Approve to deploy on prod') {
 
 stage('Deploy on first production node') {
    sh(script: "scp /var/lib/jenkins/workspace/python* root@192.168.1.190:~")
-    node("prod1") {
+    agent { label 'Prod1' } {
         sh(script: "dpkg -i \$(ls -t /root | grep python | head -1)")
     }
     node("nginx") {
@@ -44,7 +43,7 @@ stage('Deploy on first production node') {
 
 stage('Deploy on second production node') {
    sh(script: "scp /var/lib/jenkins/workspace/python* root@192.168.1.191:~")
-    node("prod1") {
+    agent { label 'Prod2' } {
         sh(script: "dpkg -i \$(ls -t /root | grep python | head -1)")
     }
     node("nginx") {
