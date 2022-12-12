@@ -1,4 +1,4 @@
-
+import hudson.FilePath
 stage('Pre-check Stage') {
     def existsTest = sh(script: "test -f /var/lib/jenkins/workspace/python*", returnStatus: true)
     if (existsTest != 0 ) {
@@ -30,7 +30,7 @@ stage('Deploy on first production node') {
     agent { label 'Prod1' } {
         sh(script: "dpkg -i \$(ls -t /root | grep python | head -1)")
     }
-    node("nginx") {
+    agent { label 'Nginx' } {
         def Check2 = sh(script: "curl http://192.168.1.190:80/",returnStatus: true)
         if (Check2 != 0) {
         //notify to telegram error1
@@ -44,7 +44,7 @@ stage('Deploy on second production node') {
     agent { label 'Prod2' } {
         sh(script: "dpkg -i \$(ls -t /root | grep python | head -1)")
     }
-    node("nginx") {
+    agent { label 'Nginx' } {
         def Check3 = sh(script: "curl http://192.168.1.191:80/",returnStatus: true)
         if (Check3 != 0) {
         //notify to telegram error2
