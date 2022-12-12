@@ -9,7 +9,9 @@ stage('Pre-check Stage') {
 }
 
 stage('Deploy to testing node') {
-    sh(script: "scp /var/lib/jenkins/workspace/python* root@192.168.1.180:~")
+    agent any {
+        sh(script: "scp /var/lib/jenkins/workspace/python* root@192.168.1.180:~")
+    }
 
     agent { label 'testing-env' } {
         def Ins1 = sh(script: "dpkg -i \$(ls -t /root | grep python | head -1)",returnStatus: true)
@@ -25,13 +27,18 @@ stage('Deploy to testing node') {
 }
 
 stage('Approve to deploy on prod') {
-    echo "Application is running well on Testing environemnt"
-    input(message: "Continue deploying to Production?", ok: 'OK')
-    // notify to telegram
+    agent any {
+        echo "Application is running well on Testing environemnt"
+        input(message: "Continue deploying to Production?", ok: 'OK')
+        // notify to telegram
+    }
 }
 
 stage('Deploy on first production node') {
-   sh(script: "scp /var/lib/jenkins/workspace/python* root@192.168.1.190:~")
+    agent any {
+        sh(script: "scp /var/lib/jenkins/workspace/python* root@192.168.1.190:~")
+    }
+
     agent { label 'Prod1' } {
         def Ins2 = sh(script: "dpkg -i \$(ls -t /root | grep python | head -1)",returnStatus: true)
         if (Ins2 != 0) {
@@ -48,7 +55,10 @@ stage('Deploy on first production node') {
 }
 
 stage('Deploy on second production node') {
-   sh(script: "scp /var/lib/jenkins/workspace/python* root@192.168.1.191:~")
+    agent any {
+        sh(script: "scp /var/lib/jenkins/workspace/python* root@192.168.1.191:~")
+    }
+    
     agent { label 'Prod2' } {
         def Ins3 = sh(script: "dpkg -i \$(ls -t /root | grep python | head -1)",returnStatus: true)
         if (Ins3 != 0) {
