@@ -4,8 +4,8 @@ stage('Build Package') {
     node ("Jenkin-node") {
         git branch: 'main', url: "https://github.com/t-d-h/python-webserver.git"
         sh(script: "rm -f /var/lib/jenkins/workspace/python*")
-        sh(script: "dpkg -b /var/lib/jenkins/workspace/Build-Debian-Package/")
-        sh(script: "dpkg-name /var/lib/jenkins/workspace/Build-Debian-Package.deb")
+        sh(script: "dpkg -b /var/lib/jenkins/workspace/Deployment/")
+        sh(script: "dpkg-name /var/lib/jenkins/workspace/Deployment.deb")
         //Dont need to add check here because pipeline will stop when exitcode = 1
         pkgName = sh(script:"ls -t /var/lib/jenkins/workspace/ | grep python", returnStdout: true).trim()
     }
