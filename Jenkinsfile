@@ -1,10 +1,8 @@
 
 stage('Pre-check Stage') {
-    steps {
-        def existsTest = sh(script: "test -f /var/lib/jenkins/workspace/python*", returnStatus: true)
-        if (existsTest != 0 ) {
-            error("Package not found")
-        }
+    def existsTest = sh(script: "test -f /var/lib/jenkins/workspace/python*", returnStatus: true)
+    if (existsTest != 0 ) {
+        error("Package not found")
     }
 }
 
@@ -51,23 +49,6 @@ stage('Deploy on second production node') {
         if (Check3 != 0) {
         //notify to telegram error2
         error("Your application is not running, please revert")
-        }
-    }
-}
-
-
-stage('Post check on Production environment') {
-
-    //send success
-    agent { label 'prod-env' }
-    steps {
-        script {
-            def status = sh(returnStatus: true, script: "curl http://127.0.0.1/check > check.txt")
-            if (status != "OK") {                
-            def output = readFile('check.txt').trim()
-            error 'Your application is not running, Emergency'
-            }
-            sh 'rm check.txt'
         }
     }
 }
