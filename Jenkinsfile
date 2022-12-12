@@ -1,5 +1,5 @@
 import hudson.FilePath
-
+def pkgName
 stage('Build Package') {
     node ("Jenkin-node") {
         git branch: 'main', url: "https://github.com/t-d-h/python-webserver.git"
@@ -7,7 +7,7 @@ stage('Build Package') {
 
         sh(script: "dpkg -b /var/lib/jenkins/workspace/Build-Debian-Package/")
         sh(script: "dpkg-name /var/lib/jenkins/workspace/Build-Debian-Package.deb")
-        def pkgName = sh(script:"ls -t /var/lib/jenkins/workspace/ | grep python", returnStdout: true).trim()
+        pkgName = sh(script:"ls -t /var/lib/jenkins/workspace/ | grep python", returnStdout: true).trim()
     }
 }
 
